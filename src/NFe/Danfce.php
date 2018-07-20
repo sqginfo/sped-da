@@ -14,6 +14,7 @@ namespace NFePHP\DA\NFe;
  * @author    Roberto Spadim <roberto at spadim dot com dot br>
  */
 use Exception;
+use InvalidArgumentException;
 use NFePHP\DA\Legacy\Dom;
 use NFePHP\DA\Legacy\Pdf;
 use NFePHP\DA\Legacy\Common;
@@ -216,7 +217,7 @@ class Danfce extends Common
         }
         $this->qrCode = $this->dom->getElementsByTagName('qrCode')->item(0)->nodeValue;
         if ($this->pSimpleGetValue($this->ide, "mod") != '65') {
-            throw new nfephpException("O xml do DANFE deve ser uma NFC-e modelo 65");
+            throw new InvalidArgumentException("O xml do DANFE deve ser uma NFC-e modelo 65");
         }
     }
     
@@ -886,7 +887,7 @@ class Danfce extends Common
         $y += 6;
         $margemInterna = $this->margemInterna;
         $maxW = $this->wPrint;
-        $w = ($maxW*1);
+        $w = ($maxW*1)+4;
         $hLinha = $this->hLinha;
         $hBoxLinha = $this->hBoxLinha;
         $aFontTit = array('font'=>$this->fontePadrao, 'size'=>8, 'style'=>'B');
@@ -917,7 +918,7 @@ class Danfce extends Common
         $this->pdf->image($pic, $xQr, $yQr, $wQr, $hQr, 'PNG');
         $dt = new DateTime($dhRecbto);
         $yQr = ($yQr+$hQr+$margemInterna);
-        $this->pTextBox($x, $yQr, $w, $hBoxLinha, "Protocolo de Autorização: " . $nProt . "\n"
+        $this->pTextBox($x, $yQr, $w-4, $hBoxLinha, "Protocolo de Autorização: " . $nProt . "\n"
             . $dt->format('d/m/Y H:i:s'), $aFontTex, 'C', 'C', 0, '', false);
     }
    
